@@ -1,0 +1,75 @@
+{% extends "base.html.twig" %}
+
+{% block body %}
+	{% if app.user %}
+		<div class="d-flex flex-column flex-shrink-0 p-3 bg-light bg-yellow" style="width: 280px;">
+			<h3>Welcome,
+				<span style="font-size: 15px; font-weight:200;">{{ app.user.userIdentifier }}</span>
+			</h3>
+			<a href="{{ path('app_logout') }}">Logout</a>
+
+			<hr>
+			<ul class="nav nav-pills flex-column mb-auto">
+
+				<li>
+					<a href="{{path('app_dashboard')}}" class="nav-link link-dark">
+						Dashboard
+					</a>
+				</li>
+				<li>
+<a href="{{path('app_appliedExams', {'id': app.user.id})}}" class="nav-link  link-dark">
+
+
+Applied Exams
+
+					</a>
+				</li>
+				<li>
+					<a href="{{path('app_exams')}}" class="nav-link active link-dark">
+						Upcoming exams
+					</a>
+				</li>
+				<li>
+<a href="{{ path('app_profile', { 'id': app.user.id }) }}" class="nav-link link-dark">Profile
+
+					</a>
+				</li>
+			</ul>
+		</div>
+
+	{% endif %}
+
+
+	<div class="container" style="width:1000px; position:absolute; right:50px; top:50px;">
+		<table class="table">
+			<thead>
+				<tr>
+					<th scope="col">#</th>
+					<th scope="col">Exam Name</th>
+					<th scope="col">Owner</th>
+					<th scope="col">Action</th>
+
+				</tr>
+			</thead>
+			<tbody>
+			
+				{% for i in 0..(jsonData.examNames|length -1) %}
+					{# {{% set passStatus = jsonData.passStatus[i] == 'yes' ? 'Passed' : 'Failed' %} } #}
+					 <tr>
+						<td>{{ i + 1 }}</td>
+						<td>{{ jsonData.examNames[i] }}</td>
+						<td>{{ jsonData.owners[i] }}</td>
+						<td>
+							<a href="{{path('apply_exam', {'profileId' : jsonData.prfileId, 'examId' : jsonData.examsId[i]})}} " class="btn btn-primary">Apply here</td>
+
+
+						</td>
+
+					</tr>
+				{% endfor %}
+			</tbody>
+		</table>
+
+	</div>
+
+{% endblock %}

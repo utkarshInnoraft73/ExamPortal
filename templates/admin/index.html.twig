@@ -1,0 +1,69 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello Admin!
+{% endblock %}
+
+{% block body %}
+	{% if app.user %}
+		<div class="d-flex flex-column flex-shrink-0 p-3 bg-light bg-yellow" style="width: 280px;">
+			<h3>Welcome,
+				<span style="font-size: 15px; font-weight:200;" class="badge bg-success">Admin:
+					{{ app.user.userIdentifier }}</span>
+
+			</h3>
+			<a href="{{ path('app_logout') }}">Logout</a>
+
+			<hr>
+			<ul class="nav nav-pills flex-column mb-auto">
+
+				<li>
+					<a href="{{path('app_admin')}}" class="nav-link active link-dark">
+						Dashboard
+					</a>
+				</li>
+				<li>
+					<a href="{{path('create_exam')}}" class="nav-link link-dark">
+
+						Create exam
+
+					</a>
+				</li>
+				<li>
+					<a href="{{path('your_exams',{ 'id': app.user.id })}}" class="nav-link link-dark">
+						Created Exam
+					</a>
+				</li>
+			</ul>
+		</div>
+		{# Dashboard body starts here. #}
+		<div class="dashboard-body">
+			<div class="container">
+				<div class="row mt-5">
+					<div class="col-6 mt-2">
+						<div class="card">
+							<div class="card-body">
+								<h5 class="card-title">Created exams</h5>
+								{# <h6 class="card-subtitle mb-2 text-muted">Create exams.</h6> #}
+								<p class="card-text">Create your own exam.</p>
+								<a href="{{path('create_exam')}}" class="card-link">Show more</a>
+							</div>
+						</div>
+					</div>
+					<div class="col-6 mt-2">
+						<div class="card">
+							<div class="card-body">
+								<h5 class="card-title">Your created exams.</h5>
+								<h6 class="card-subtitle mb-2 text-muted">See your exams.</h6>
+								<p class="card-text">See all exam created by youself.</p>
+								<a href="{{path('your_exams',{ 'id': app.user.id })}}" class="card-link">Show more</a>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	{% endif %}
+	{# Dashboard body ends here. #}
+
+
+{% endblock %}

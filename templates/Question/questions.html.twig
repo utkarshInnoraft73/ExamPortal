@@ -1,0 +1,40 @@
+{% extends 'base.html.twig' %}
+{% block title %}Profile
+{% endblock %}
+{% block body %}
+<div class="container my-4" style = "width:50rem; border: 2px solid gray; border-radius:10px;">
+{# show_questions.html.twig #}
+{# {{ dump(question) }} #}
+<div class="box-shadow rounded mt-2 p-4" style = "background-color:#f7f7f7;; border-radius:10px;">
+<form action = "{{path('exam_submit')}}"  method="POST">
+  {% for questions in question %}
+    <div class = "my-3">
+      <p class = "fw-bold fs-5">{{loop.index}}. {{ questions.question }}</p>
+      <label class = "fw-light text-muted">
+        <input type="radio" name="answers[{{ questions.id }}]" value="a">
+        {{ questions.optA}}
+      </label>
+      <label class = "fw-light text-muted">
+        <input type="radio" name="answers[{{ questions.id }}]" value="b">
+        {{ questions.optB }}
+      </label>
+      <label class = "fw-light text-muted">
+        <input type="radio" name="answers[{{ questions.id }}]" value="c">
+        {{ questions.optC }}
+      </label>
+      <label class = "fw-light text-muted">
+        <input type="radio" name="answers[{{ questions.id }}]" value="d">
+        {{ questions.optD }}
+      </label>
+    </div>
+  {% endfor %}
+  <button type="submit" class="btn btn-success">Submit</button>
+</form>
+</div>
+</div>
+{% endblock %}
+
+
+
+
+

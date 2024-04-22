@@ -1,0 +1,67 @@
+{% extends 'base.html.twig' %}
+{% block body %}
+	<div class="sidebar d-flex flex-column flex-shrink-0 p-3 bg-light bg-yellow" style="width: 280px;">
+		<h3>Welcome,
+			<span style="font-size: 15px; font-weight:200;">{{ app.user.userIdentifier }}</span>
+		</h3>
+		<a href="{{ path('app_logout') }}">Logout</a>
+		<hr>
+		<ul class="nav nav-pills flex-column mb-auto">
+			<li>
+				<a class="nav-link  link-dark" href="{{path("app_dashboard")}}">
+					Dashboard
+				</a>
+			</li>
+			<li>
+				<a href="{{path('app_appliedExams', {'id': app.user.id})}}" class="nav-link link-dark">
+
+					Applied Exams
+				</a>
+			</li>
+			<li>
+				<a href="{{path('app_exams')}}" class="nav-link link-dark">
+					Upcoming exams
+				</a>
+			</li>
+			<li>
+				<a href=" {{ path('app_profile', { 'id': app.user.id } ) }}" class="nav-link active">
+					Profile
+				</a>
+			</li>
+		</ul>
+	</div>
+	{% if profileId is not null %}
+		<div style="width:700px; position: absolute; right:200px;">
+			<div class="card text-center flex flex-col my-5">
+				<div class="card-header">
+					<h3 class="text-dark">Welcome,
+						<span style="font-weight:200; font-size:20px;">
+							{{userName}}
+						</span>
+					</h3>
+				</div>
+				<div>
+
+					<p>Name:
+						{{userName}}</p>
+					<p>School Percent:
+						{{userSchool}}</p>
+					<p>Graduation Percent:
+						{{userGraduation}}</p>
+					<p>Resume:
+						<a href={{userResume}} target="_blank">Click me</a>
+					</p>
+				</p>
+				<p>
+					<a href="{{ path('app_editProfile', {'id': profileId}) }}">Edit Profile</a>
+				</p>
+			</p>
+		</div>
+
+	</div>
+</div>{% else %}
+<div style="text-align: center;">
+	<h3>{{msg}}
+		<a href="{{path('create_profile')}}" class="btn btn-primary">Create Profile</a>
+		here.</h3>
+</div>{% endif %}</div>{% endblock %}

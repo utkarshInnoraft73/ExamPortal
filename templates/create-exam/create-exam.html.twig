@@ -1,0 +1,30 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Register
+{% endblock %}
+
+{% block body %}
+	<div class="container">
+		<div class="mx-auto my-5" style="width:500px; background-color: #bfbbbb; padding:20px; border-radius: 50px 10px 50px 10px;">
+			<h1>Create exam</h1>
+			<hr>
+			{{ form_errors(form) }}
+			{{ form_start(form) }}
+			{{ form_row(form.exam_name) }}
+			{{ form_row(form.passing_marks) }}
+			{{ form_row(form.exam_date) }}
+			{{ form_row(form.required_schooling_marks) }}
+			{{ form_row(form.required_graduation_marks) }}
+			{{ form_row(form.total_marks) }}
+			{{ form_row(form.no_of_questios) }}
+			{{ form_row(form.duration) }}
+			<button type="submit" class="btn my-btn">Save Changes</button>
+			{{ form_end(form) }}
+			<div class="alert alert-warning my-2" role="alert">
+				Note: You can only these predefine questions for now. Click
+				<a href="{{path('app_adminQuestion')}}">here</a>
+				to see.
+			</div>
+		</div>
+	</div>
+{% endblock %}

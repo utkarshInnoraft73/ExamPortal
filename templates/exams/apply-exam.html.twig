@@ -1,0 +1,78 @@
+{% extends "base.html.twig" %}
+
+{% block body %}
+	{# {% %} #}
+		<div class="d-flex flex-column flex-shrink-0 p-3 bg-light bg-yellow" style="width: 280px;">
+			<h3>Welcome,
+				<span style="font-size: 15px; font-weight:200;">{{ app.user.userIdentifier }}</span>
+			</h3>
+			<a href="{{ path('app_logout') }}">Logout</a>
+
+			<hr>
+			<ul class="nav nav-pills flex-column mb-auto">
+
+				<li>
+					<a href="{{path('app_dashboard')}}" class="nav-link link-dark">
+						Dashboard
+					</a>
+				</li>
+				<li>
+<a href="{{path('app_appliedExams', {'id': app.user.id})}}" class="nav-link  link-dark">
+
+
+Applied Exams
+
+					</a>
+				</li>
+				<li>
+					<a href = "{{path('app_exams')}}" class="nav-link active link-dark">
+						Upcoming exams
+					</a>
+				</li>
+				<li>
+<a href="{{ path('app_profile', { 'id': app.user.id }) }}" class="nav-link link-dark">
+
+						Profile
+					</a>
+				</li>
+			</ul>
+		</div>
+
+	{# {% endif %} #}
+
+<div class="container" style="width:1000px; position:absolute; right:50px; top:50px;">
+	{#% if marksRequired < profileSchool and marksRequired < profileGraduation %}
+		<h4>Congratulations,
+			{{ profileName }}
+			you have applied successfully for exam:
+			{{ examName }}.</h4>
+	{% else %}
+		<h4>Sorry
+			{{ profileName }}, but you are not eligible for exam
+			{{ examName }}.</h4>
+	{% endif %}
+</div> #}
+
+
+<div class="container">
+	<div class="innerContent">
+		<h1>Apply your exam</h1>
+		<hr>
+
+		{{ form_errors(form) }}
+
+		{{ form_start(form) }}
+{{ form_row(form.profile) }}
+
+{{ form_row(form.exam) }}
+
+		<button type="submit" class="btn btn-primary mt-3">Save changes</button>
+		{{ form_end(form) }}
+
+	</div>
+</div>
+
+
+
+{% endblock %}
+

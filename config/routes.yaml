@@ -1,0 +1,96 @@
+# Route on the /.
+app_general:
+    path: /
+    controller: App\Controller\GeneralController::index
+
+# Route of app_register on url /register.
+app_register:
+    path: /register
+    controller: App\Controller\RegistrationController::register
+
+# Route of app_login on url /login.
+app_login:
+    path: /login
+    controller: App\Controller\LoginController::login
+
+# Route of app_logout on url /logout.
+app_logout:
+    path: /logout
+    controller: App\Controller\LoginController::logout
+
+# Route of app_dashboard on url /dashboard.
+app_dashboard:
+    path: /dashboard
+    controller: App\Controller\GeneralController::dashboard
+
+# Route of app_profile on url /profile/{id}.
+app_profile:
+    path: /profile/{id}
+    controller: App\Controller\GeneralController::profile
+
+# Route of app_exams on url /exam/{id}.
+app_exams:
+    path: /exams
+    controller: App\Controller\GeneralController::exams
+
+# Route of app_exams on url /exam/{id}.
+app_createProfile:
+    path: /create-profile/{id}
+    controller: App\Controller\GeneralController::createProfile
+
+# Route of app_exams on url /exam/{id}.
+app_editProfile:
+    path: /edit-profile/{id}
+    controller: App\Controller\GeneralController::editProfile
+
+apply_exam:
+    path: /apply-exam/{profileId}/{examId}
+    controller: App\Controller\GeneralController::applyExam
+
+app_appliedExams:
+    path: user-exams/{id}
+    controller: App\Controller\GeneralController::appliedExams
+
+app_startExam:
+    path: start-exam/{examId}/{profileId}
+    controller: App\Controller\GeneralController::startExam
+
+app_questionList:
+    path: questions/{userId}/{examId}
+    controller: App\Controller\GeneralController::questions
+
+app_openQuestion:
+    path: open-question/{userId}/{examId}/{quesId}
+    controller: App\Controller\GeneralController::openQuestion
+
+app_admin:
+    path: /admin
+    controller: App\Controller\AdminController::index
+
+create_exam:
+    path: /admin/create-exam/
+    controller: App\Controller\AdminController::createExam
+
+your_exams:
+    path: /admin/your-exams/{id}
+    controller: App\Controller\AdminController::yourExams
+
+delete_exams:
+    path: /admin/delete-exams/{examId}
+    controller: App\Controller\AdminController::deleteExams
+
+adminexam_details:
+    path: /admin/your-exam-detail/{examId}
+    controller: App\Controller\AdminController::yourExamDetail
+
+app_adminQuestion:
+    path: /admin/questions
+    controller: App\Controller\AdminController::allQuestions
+
+exam_submit:
+    path: /exam-submit
+    controller: App\Controller\GeneralController::examSubmit
+
+exam_result:
+    path: /result/{gotenmarks}/{incorrectans}/{correctans}
+    controller: App\Controller\GeneralController::result
