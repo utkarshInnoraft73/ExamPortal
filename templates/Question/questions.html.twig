@@ -6,7 +6,7 @@
 {# show_questions.html.twig #}
 {# {{ dump(question) }} #}
 <div class="box-shadow rounded mt-2 p-4" style = "background-color:#f7f7f7;; border-radius:10px;">
-<form action = "{{path('exam_submit')}}"  method="POST">
+<form action = "{{path('exam_submit',{'examId':examId})}}"  method="POST">
   {% for questions in question %}
     <div class = "my-3">
       <p class = "fw-bold fs-5">{{loop.index}}. {{ questions.question }}</p>

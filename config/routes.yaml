@@ -88,9 +88,13 @@ app_adminQuestion:
     controller: App\Controller\AdminController::allQuestions
 
 exam_submit:
-    path: /exam-submit
+    path: /exam-submit/{examId}
     controller: App\Controller\GeneralController::examSubmit
 
 exam_result:
-    path: /result/{gotenmarks}/{incorrectans}/{correctans}
+    path: /result/{resultId}
     controller: App\Controller\GeneralController::result
+
+exam_allResult:
+    path: /results/{examId}
+    controller: App\Controller\GeneralController::allResult

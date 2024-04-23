@@ -171,7 +171,7 @@ class AdminController extends AbstractController
     {
         $exam = $er->findAll();
         $user = $this->em->getRepository(User::class)->find($id);
-        $userName = $user->getProfile()->getName();
+        $userName = $user->getEmail();
         $examArr = [];
         $examId = [];
         $examDuration = [];

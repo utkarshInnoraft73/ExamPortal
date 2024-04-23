@@ -8,13 +8,14 @@ use App\Entity\Profile;
 use App\Entity\Questions;
 use App\Form\ProfileType;
 use App\Form\ProfileFormType;
-use App\Form\AApplyExamFormType;
 use App\Entity\ProfileExamRelated;
+use App\Entity\Result;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Serializer\SerializerInterface;
+use App\Entity\Solution;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 /**
@@ -105,7 +106,7 @@ class GeneralController extends AbstractController
         $profile = $user->getProfile();
 
         // Check if the proile id null then redirect to the create profile.
-        if ($profile == null) {
+        if ($profile == NULL) {
             return $this->redirectToRoute('app_createProfile', ['id' => $id]);
         }
 
@@ -220,18 +221,29 @@ class GeneralController extends AbstractController
      */
     public function exams(SerializerInterface $serializer): Response
     {
-        $exams = $this->em->getRepository(ProfileExamRelated::class)->findAll();
+        $exams = $this->em->getRepository(Exam::class)->findAll();
+        $profileExam = $this->em->getRepository(ProfileExamRelated::class)->findAll();
+        $profileExamId = [];
+        for ($i = 0; $i < count($profileExam); $i++) {
+            array_push($profileExamId, $profileExam[$i]->getProfile()->getId());
+        }
         $profileId = $this->getUser()->getId();
         $profile = $this->em->getRepository(User::class)->find($profileId);
+
+        // Check if the proile id null then redirect to the create profile.
+        if ($profile->getProfile() == NULL) {
+            return $this->redirectToRoute('app_createProfile', ['id' => $this->getUser()->getId()]);
+        }
+
         $profileInd = $profile->getProfile()->getId();
         $examsId = [];
         $examsName = [];
         $owner = [];
         for ($i = 0; $i < count($exams); $i++) {
-            if ($profileInd != $exams[$i]->getProfile()->getId()) {
-                array_push($examsId, $exams[$i]->getExam()->getId());
-                array_push($examsName, $exams[$i]->getExam()->getExamName());
-                array_push($owner, $exams[$i]->getExam()->getCreatedBy());
+            if ($profileInd != $profileExamId) {
+            array_push($examsId, $exams[$i]->getId());
+            array_push($examsName, $exams[$i]->getExamName());
+            array_push($owner, $exams[$i]->getCreatedBy());
             }
         }
         $data = [
@@ -246,7 +258,6 @@ class GeneralController extends AbstractController
             'jsonData' => $jsonDataArray
         ]);
     }
-
 
     /**
      * Routing for apply exam.
@@ -270,33 +281,28 @@ class GeneralController extends AbstractController
      *
      * @return Response
      */
-    public function applyExam(Request $request, int $examId, int $profileId): Response
+    public function applyExam(int $examId, int $profileId): Response
     {
 
         $user = $this->em->getRepository(Profile::class)->find($profileId);
+
         $userSchoolMarks = $user->getSchoolingPercent();
         $userGraduationMarks = $user->getGraduationPercent();
         $exam = $this->em->getRepository(Exam::class)->find($examId);
         $examRequiredSchoolMarks = $exam->getRequiredSchoolingMarks();
         $examRequiredGraduationMarks = $exam->getRequiredGraduationMarks();
+        $applyAlert = "Sorry You are not Eligible for this exam, Required schooling & graduation percentage are $examRequiredSchoolMarks, $examRequiredGraduationMarks and yours are $userSchoolMarks, $userGraduationMarks";
 
-        if ($userSchoolMarks > $examRequiredSchoolMarks && $userGraduationMarks > $examRequiredGraduationMarks) {
+        if ($userSchoolMarks >= $examRequiredSchoolMarks && $userGraduationMarks >= $examRequiredGraduationMarks) {
             $profileExam = new ProfileExamRelated();
             $profileExam->setProfile($user);
             $profileExam->setExam($exam);
-
-            $form = $this->createForm(AApplyExamFormType::class, $profileExam);
-            $form->handleRequest($request);
-
-            if ($form->isSubmitted() && $form->isValid()) {
-                $this->em->persist($profileExam);
-                $this->em->flush();
-                $this->addFlash('success', 'Exam applied successfully!');
-                return $this->redirectToRoute('app_exams');
-            }
+            $this->em->persist($profileExam);
+            $this->em->flush();
+            $applyAlert = "Congratulations. You have applied successfully.";
         }
         return $this->render('exams/apply-exam.html.twig', [
-            'form' => $form->createView(),
+            'alertExam' => $applyAlert,
         ]);
     }
 
@@ -327,7 +333,12 @@ class GeneralController extends AbstractController
     public function appliedExams(SerializerInterface $serializer, $id): response
     {
         $profile = $this->em->getRepository(User::class)->find($id);
+        // Check if the proile id null then redirect to the create profile.
+        if ($profile->getProfile() == NULL) {
+            return $this->redirectToRoute('app_createProfile', ['id' => $this->getUser()->getId()]);
+        }
         $profileId = $profile->getProfile()->getId();
+
         $exams = $this->em->getRepository(ProfileExamRelated::class)->findAll();
         $examList = [];
         $examId = [];
@@ -347,7 +358,7 @@ class GeneralController extends AbstractController
             'owners' => $owner,
         ];
         $jsonContent = $serializer->serialize($data, 'json');
-        $jsonDataArray = json_decode($jsonContent, true);
+        $jsonDataArray = json_decode($jsonContent, TRUE);
         return $this->render('exams/applied-exam.html.twig', [
             'jsonData' => $jsonDataArray
         ]);
@@ -418,7 +429,7 @@ class GeneralController extends AbstractController
      *
      *
      */
-    public function questions(int $userId, int $examId): response
+    public function questions(int $examId): response
     {
         $question = $this->em->getRepository(Questions::class)->findAll();
 
@@ -434,7 +445,7 @@ class GeneralController extends AbstractController
      * Route name (exam_submit).
      *
      */
-    #[Route('/exam-submit', name: 'exam_submit')]
+    #[Route('/exam-submit/{examId}', name: 'exam_submit')]
 
     /**
      * Public function examSubmit().
@@ -445,33 +456,43 @@ class GeneralController extends AbstractController
      *
      * @return response
      */
-    public function examSubmit(Request $request): response
+    public function examSubmit(Request $request, int $examId): response
     {
-        $ans = $request->get('answers');
+        $answer = $request->get('answers');
+        $ans = [];
+        foreach ($answer as $value) {
+            # code...
+            array_push($ans, $value);
+        }
+
         $correctAns = 0;
         $incorrectAns = 0;
         $gotenMarks = 0;
         $question = $this->em->getRepository(Questions::class)->findAll();
 
         $correct = [];
-        $userAns = [];
         $pointedMarks = [];
 
-        for ($i = 1; $i <= count($ans); $i++) {
-            array_push($userAns, $ans[$i]);
-        }
         for ($i = 0; $i < count($question); $i++) {
             array_push($correct, $question[$i]->getCorrectOpt());
             array_push($pointedMarks, $question[$i]->getMarksForQuestion());
-            if ($userAns[$i] == $correct[$i]) {
+            if ($ans[$i] == $correct[$i]) {
                 $gotenMarks += $pointedMarks[$i];
                 $correctAns++;
             } else {
                 $incorrectAns++;
             }
         }
+        $result = new Result();
+        $result->setExamId($examId);
+        $result->setUserId($this->getUser()->getId());
+        $result->setCorrectAns($correctAns);
+        $result->setIncorrectAns($incorrectAns);
+        $result->setGottenMarks($correctAns);
+        $this->em->persist($result);
+        $this->em->flush();
 
-        return $this->redirectToRoute('exam_result', ['gotenmarks' => $gotenMarks, 'incorrectans' => $incorrectAns, 'correctans' => $correctAns,]);
+        return $this->redirectToRoute('exam_result', ['resultId'=>$result->getId()]);
     }
 
     /**
@@ -480,7 +501,7 @@ class GeneralController extends AbstractController
      * Route name (app_startExam).
      *
      */
-    #[Route('/result/{gotenmarks}/{incorrectans}/{correctans}', name: 'exam_result')]
+    #[Route('/result/{resultId}', name: 'exam_result')]
 
     /**
      * Public function result().
@@ -500,16 +521,80 @@ class GeneralController extends AbstractController
      *
      * @return response
      */
-    public function result(SerializerInterface $serializer, int $gotenmarks, int $incorrectans, int $correctans): response
+    public function result(SerializerInterface $serializer, int $resultId): response
     {
+        // $result = $this->em->getRepository(Solution::class)->find($resultId);
+        $result = $this->em->getRepository(Result::class)->find($resultId);
+
         $data = [
-            'correctans' => $correctans,
-            'incorrectans' => $incorrectans,
-            'gotenmarks' => $gotenmarks,
+            'correctans' => $result->getCorrectAns(),
+            'incorrectans' => $result->getIncorrectAns(),
+            'gotenmarks' => $result->getGottenMarks(),
         ];
         $jsonContent = $serializer->serialize($data, 'json');
-        $jsonDataArray = json_decode($jsonContent, true);
+        $jsonDataArray = json_decode($jsonContent, TRUE);
         return $this->render('result/result.html.twig', [
+            'jsonData' => $jsonDataArray
+        ]);
+    }
+
+    /**
+     * Route for the applied exams list for user.
+     * Path (domain/open-exam/{userId}/{examId}/{quesId}).
+     * Route name (app_startExam).
+     *
+     */
+    #[Route('/results/{examId}', name: 'exam_allResult')]
+
+    /**
+     * Public function result().
+     *  To show user result for the exam.
+     *
+     * @param SerializerInterface $serializer.
+     *  To manage the requests.
+     *
+     * @param string $gottenmarks.
+     *  User Marks gotten.
+     *
+     * @param string inccorectans.
+     *  Numbers of question that are answered wrong.
+     *
+     * @param string correctans.
+     *  number questions that are answered correct.
+     *
+     * @return response
+     */
+    public function allResult(SerializerInterface $serializer, int $examId): response
+    {
+        $result = $this->em->getRepository(Result::class)->findAll();
+        $exam = $this->em->getRepository(Exam::class)->find($examId);
+        $resultArr = [];
+        foreach ($result as $value) {
+         array_push($resultArr, $value);
+        }
+        $examIDFromQues = [];
+        $resultId = [];
+        $correctAns = [];
+        $incorrectAns = [];
+        $gottenmarks = [];
+        for($i = 0; $i <count($resultArr); $i++){
+            if($exam->getId() == $resultArr[$i]->getExamId()){
+                array_push($resultId, $result[$i]->getId());
+                array_push($examIDFromQues, $result[$i]->getExamId());
+                array_push($correctAns, $result[$i]->getCorrectAns());
+                array_push($incorrectAns, $result[$i]->getIncorrectAns());
+                array_push($gottenmarks, $result[$i]->getGottenMarks());
+            }
+        }
+        $data = [
+            'resultId' => $resultId,
+            'correctans' => $correctAns,
+            'incorrectans' => $incorrectAns,
+            'gotenmarks' => $gottenmarks,
+        ];
+        $jsonContent = $serializer->serialize($data, 'json');
+        $jsonDataArray = json_decode($jsonContent, TRUE);
+        return $this->render('result/allResult.html.twig', [
             'jsonData' => $jsonDataArray
         ]);
     }

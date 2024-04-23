@@ -8,6 +8,8 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\UX\Turbo\Attribute\Broadcast;
+use Symfony\Component\Validator\Constraints as Assert;
+
 
 #[ORM\Entity(repositoryClass: ExamRepository::class)]
 #[Broadcast]
@@ -26,7 +28,7 @@ class Exam
      * @var int $id
      *  Store the exam id in exam table.
      */
-    private ?int $id = null;
+    private ?int $id = NULL;
 
     #[ORM\Column(length: 255)]
 
@@ -34,7 +36,12 @@ class Exam
      * @var string $exam_name
      *  Store the exam sort name.
      */
-    private ?string $exam_name = null;
+    #[Assert\Regex(
+        pattern: "/^[a-zA-Z ]+$/",
+        match: TRUE,
+        message: "The input '{{ value }}' is not a valid percentage value. Please enter a percentage like 'Utkarsh Kumar'",
+    )]
+    private ?string $exam_name = NULL;
 
     #[ORM\Column(length: 100)]
 
@@ -42,11 +49,16 @@ class Exam
      * @var string $passing_marks
      *  Store the passing marks.
      */
-    private ?string $passing_marks = null;
+    private ?string $passing_marks = NULL;
 
     /**
      * @var Collection<int, ProfileExamRelated>
      */
+    #[Assert\Regex(
+        pattern: "/^\d$/",
+        match: TRUE,
+        message: 'Your name cannot contain a number.',
+    )]
     #[ORM\OneToMany(targetEntity: ProfileExamRelated::class, mappedBy: 'exam')]
     private Collection $profileExamsRelatedExam;
 
@@ -56,7 +68,7 @@ class Exam
      * @var string $Created_by
      *  Store the Admin from whoes exams is created.
      */
-    private ?string $Created_by = null;
+    private ?string $Created_by = NULL;
 
     #[ORM\Column(length: 100)]
 
@@ -64,7 +76,12 @@ class Exam
      * @var string $total_marks
      *  Store the total marks.
      */
-    private ?string $total_marks = null;
+    #[Assert\Regex(
+        pattern: "/^\d$/",
+        match: TRUE,
+        message: 'Your name cannot contain a number.',
+    )]
+    private ?string $total_marks = NULL;
 
     #[ORM\Column(length: 100)]
 
@@ -72,7 +89,7 @@ class Exam
      * @var string $number_of_questios
      *  Store the .number of all questions.
      */
-    private ?string $no_of_questios = null;
+    private ?string $no_of_questios = NULL;
 
     #[ORM\Column(length: 255)]
 
@@ -80,29 +97,34 @@ class Exam
      * @var string $duration
      *  Store the Exam durations.
      */
-    private ?string $duration = null;
+    private ?string $duration = NULL;
 
     /**
      * @var Collection<int, Questions>
      */
-    #[ORM\OneToMany(targetEntity: Questions::class, mappedBy: 'exam', orphanRemoval: true)]
+    #[ORM\OneToMany(targetEntity: Questions::class, mappedBy: 'exam', orphanRemoval: TRUE)]
     private Collection $question;
 
-    #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
+    #[ORM\Column(type: Types::DATETIME_MUTABLE, NULLable: TRUE)]
 
     /**
      * @var string $exam_date
      *  Store the date of the exams.
      */
-    private ?\DateTimeInterface $exam_date = null;
+    private ?\DateTimeInterface $exam_date = NULL;
 
-    #[ORM\Column(length: 255, nullable: true)]
+    #[ORM\Column(length: 255, NULLable: TRUE)]
 
     /**
      * @var string $required_schooling_marks.
      *  Store the required schooling marks of user.
      */
-    private ?string $required_schooling_marks = null;
+    #[Assert\Regex(
+        pattern: "/^\d+%$/",
+        match: TRUE,
+        message: 'Your name cannot contain a number.',
+    )]
+    private ?string $required_schooling_marks = NULL;
 
     #[ORM\Column(length: 255)]
 
@@ -110,7 +132,12 @@ class Exam
      * @var string $reuired_graduation_marks
      *  Store the Reuired graduation marks.
      */
-    private ?string $required_graduation_marks = null;
+    #[Assert\Regex(
+        pattern: "/^\d+%$/",
+        match: TRUE,
+        message: 'Your name cannot contain a number.',
+    )]
+    private ?string $required_graduation_marks = NULL;
 
     /**
      * Public funtion to constructor.
@@ -191,7 +218,8 @@ class Exam
 
     public function addProfileExamsRelatedExam(ProfileExamRelated $profileExamsRelatedExam): static
     {
-        if (!$this->profileExamsRelatedExam->contains($profileExamsRelatedExam)) {
+        if (!$this->profileExamsRelatedExam->contains($profileExamsRelatedExam))
+        {
             $this->profileExamsRelatedExam->add($profileExamsRelatedExam);
             $profileExamsRelatedExam->setExam($this);
         }
@@ -200,14 +228,14 @@ class Exam
     }
     public function removeProfileExamsRelatedExam(ProfileExamRelated $profileExamsRelatedExam): static
     {
-
-        if ($this->profileExamsRelatedExam->removeElement($profileExamsRelatedExam)) {
-            // set the owning side to null (unless already changed)
-            if ($profileExamsRelatedExam->getExam() === $this) {
-                $profileExamsRelatedExam->setExam(null);
+        if ($this->profileExamsRelatedExam->removeElement($profileExamsRelatedExam))
+        {
+            // set the owning side to NULL (unless already changed)
+            if ($profileExamsRelatedExam->getExam() === $this)
+            {
+                $profileExamsRelatedExam->setExam(NULL);
             }
         }
-
         return $this;
     }
 
@@ -319,20 +347,22 @@ class Exam
 
     public function addQuestion(Questions $question): static
     {
-        if (!$this->question->contains($question)) {
+        if (!$this->question->contains($question))
+        {
             $this->question->add($question);
             $question->setExam($this);
         }
-
         return $this;
     }
 
     public function removeQuestion(Questions $question): static
     {
-        if ($this->question->removeElement($question)) {
-            // set the owning side to null (unless already changed)
-            if ($question->getExam() === $this) {
-                $question->setExam(null);
+        if ($this->question->removeElement($question))
+        {
+            // set the owning side to NULL (unless already changed)
+            if ($question->getExam() === $this)
+            {
+                $question->setExam(NULL);
             }
         }
 

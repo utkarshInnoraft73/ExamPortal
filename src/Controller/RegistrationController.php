@@ -50,15 +50,8 @@ class RegistrationController extends AbstractController
         // Create the form for class RegistrationFormType class.
         $form = $this->createForm(RegistrationFormType::class, $user);
         $form->handleRequest($request);
-
+        
         if ($form->isSubmitted() && $form->isValid()) {
-            // $roles = $form->get('roles')->getData();
-            // foreach ($roles as $role) {
-            //     if (!$authorizationChecker->isGranted($role)) {
-            //         // Invalid role
-            //         throw new \Exception('Invalid role selected');
-            //     }
-            // } // encode the plain password
             $user->setPassword(
                 $userPasswordHasher->hashPassword(
                     $user,

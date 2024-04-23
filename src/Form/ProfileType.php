@@ -28,7 +28,6 @@ class ProfileType extends AbstractType
             ->add('schooling_percent')
             ->add('graduation_percent')
             ->add('resume_link')
-
         ;
     }
 

@@ -4,15 +4,12 @@
 	{% if app.user %}
 		<div class="d-flex flex-column flex-shrink-0 p-3 bg-light bg-yellow" style="width: 280px;">
 			<h3>Welcome,
-				<span style="font-size: 15px; font-weight:200;" class="badge bg-success">Admin:
+				<span style="font-size: 10px; font-weight:200;" class="badge bg-success">Admin:
 					{{ app.user.userIdentifier }}</span>
-
 			</h3>
 			<a href="{{ path('app_logout') }}">Logout</a>
-
 			<hr>
 			<ul class="nav nav-pills flex-column mb-auto">
-
 				<li>
 					<a href="{{path('app_admin')}}" class="nav-link  link-dark">
 						Dashboard
@@ -20,14 +17,11 @@
 				</li>
 				<li>
 					<a href="{{path('create_exam')}}" class="nav-link link-dark">
-
 						Create exam
-
 					</a>
 				</li>
 				<li>
 					<a href="{{path('your_exams',{ 'id': app.user.id })}}" class="nav-link active link-dark">
-
 						Created Exam
 					</a>
 				</li>
@@ -35,37 +29,45 @@
 		</div>
 	{% endif %}
 	<div class="container" style="width:1000px; position:absolute; right:50px; top:50px;">
-		<table class="table">
-			<thead>
-				<tr>
-					<th scope="col">#</th>
-					<th scope="col">Exam Name</th>
-					<th scope="col">Duration</th>
-					<th scope="col">Full Marks</th>
-					<th scope="col">Passing Marks</th>
-					<th scope="col">Number of questions</th>
-					<th scope="col">Action</th>
-					<th scope="col">Delete</th>
-				</tr>
-			</thead>
-			<tbody>
-				{% for i in 0..(jsonData.exam|length -1) %}
+		{% if jsonData.exam is empty %}
+			<div class="alert alert-danger" role="alert">
+				You have not created any exam till now.
+				<a href="{{path('create_exam')}}">Create Exams.
+				</a>
+			</div>
+		{% else %}
+			<table class="table">
+				<thead>
 					<tr>
-						<td>{{ i + 1 }}</td>
-						<td>{{ jsonData.exam[i] }}</td>
-						<td>{{ jsonData.duration[i] }}</td>
-						<td>{{ jsonData.fullMarks[i] }}</td>
-						<td>{{ jsonData.passingMarks[i] }}</td>
-						<td>{{ jsonData.numOfQues[i] }}</td>
-						<td>
-							<a href="{{path('adminexam_details',{'examId':jsonData.examId[i]})}}" class="btn btn-primary">More detail</td>
-						</td>
-						<td>
-							<a href="{{path('delete_exams',{'examId':jsonData.examId[i]})}}" class="btn btn-danger">Delete Exam</td>
-						</td>
+						<th scope="col">#</th>
+						<th scope="col">Exam Name</th>
+						<th scope="col">Duration</th>
+						<th scope="col">Full Marks</th>
+						<th scope="col">Passing Marks</th>
+						<th scope="col">Number of questions</th>
+						<th scope="col">Action</th>
+						<th scope="col">Delete</th>
 					</tr>
-				{% endfor %}
-			</tbody>
-		</table>
+				</thead>
+				<tbody>
+					{% for i in 0..(jsonData.exam|length -1) %}
+						<tr>
+							<td>{{ i + 1 }}</td>
+							<td>{{ jsonData.exam[i] }}</td>
+							<td>{{ jsonData.duration[i] }}</td>
+							<td>{{ jsonData.fullMarks[i] }}</td>
+							<td>{{ jsonData.passingMarks[i] }}</td>
+							<td>{{ jsonData.numOfQues[i] }}</td>
+							<td>
+								<a href="{{path('adminexam_details',{'examId':jsonData.examId[i]})}}" class="btn btn-primary">More detail</td>
+							</td>
+							<td>
+								<a href="{{path('delete_exams',{'examId':jsonData.examId[i]})}}" class="btn btn-danger">Delete Exam</td>
+							</td>
+						</tr>
+					{% endfor %}
+				</tbody>
+			</table>
+		{% endif %}
 	</div>
 {% endblock %}

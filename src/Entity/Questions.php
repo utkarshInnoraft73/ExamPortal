@@ -78,12 +78,6 @@ class Questions
     #[ORM\JoinColumn(nullable: false)]
     private ?Exam $exam = null;
 
-
-    public function __construct()
-    {
-        // $this->examQuestions = new ArrayCollection();
-    }
-
     /**
      * Public funtion getId()
      *  To get the question id
@@ -278,11 +272,25 @@ class Questions
         return $this;
     }
 
+    /**
+     * Function getExam()
+     *  To get the Exam from Exam Entity.
+     *
+     * @return Exam exam
+     *  Return the exam from Exam Entity.
+     */
     public function getExam(): ?Exam
     {
         return $this->exam;
     }
 
+    /**
+     * Function setExam()
+     *  To set the Exam from Exam Entity.
+     *
+     * @param Exam exam
+     *  The exam from Exam Entity.
+     */
     public function setExam(?Exam $exam): static
     {
         $this->exam = $exam;

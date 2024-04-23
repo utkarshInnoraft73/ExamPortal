@@ -9,44 +9,41 @@
 				<br>
 				<div style="display:flex; justify-content: space-between;">
 					<div style="width: 170px; background-color: #ffff; border-radius:10px; padding: 20px;">
-						<p class="lead mb-4 fw-bold">Owner:
+						<p class="  fw-bold">Owner:
 							<br><span class="fw-light">{{owner}}</span>
 						</p>
-
 					</div>
 					<div style="width: 170px; background-color: #ffff; border-radius:10px; padding: 20px;">
-						<p class="lead mb-4 fw-bold">Passing Marks:
+						<p class="  fw-bold">Passing Marks:
 							<br><span class="fw-light">{{passingMarks}}</span>
 						</p>
-
 					</div>
 					<div style="width: 170px; background-color: #ffff; border-radius:10px; padding: 20px;">
-						<p class="lead mb-4 fw-bold">Total Marks:
+						<p class=" fw-bold">Total Marks:
 							<br><span class="fw-light">{{totalMarks}}</span>
 						</p>
 					</div>
 					<div style="width: 200px; background-color: #ffff; border-radius:10px; padding: 20px;">
-						<p class="lead mb-4 fw-bold">Negative Marking:
-<br><span class="fw-light">No</span>
+						<p class="  fw-bold">Negative Marking:
+							<br><span class="fw-light">No</span>
 						</p>
 					</div>
 					<div style="width: 170px; background-color: #ffff; border-radius:10px; padding: 20px;">
-						<p class="lead mb-4 fw-bold">Number of questions:
+						<p class=" fw-bold">Number of questions:
 							<br><span class="fw-light">{{numOfQues}}</span>
 						</p>
 					</div>
 					<div style="width: 170px; background-color: #ffff; border-radius:10px; padding: 20px;">
-						<p class="lead mb-4 fw-bold">Duration:
+						<p class="  fw-bold">Duration:
 							<br><span class="fw-light">{{duration}}</span>
 						</p>
 					</div>
 				</div>
 				<div class="mt-5 d-grid gap-2 d-sm-flex justify-content-sm-center">
-<a href="{{path('app_questionList', {'examId':examId, 'userId': profileId })}}" class="btn btn-primary btn-lg px-4 gap-3">Start exam</button>
+					<a href="{{path('app_questionList', {'examId':examId, 'userId': profileId })}}" class="btn btn-primary btn-lg px-4 gap-3">Start exam</button>
 					<a href="{{path('app_dashboard')}}" class="btn btn-outline-dark btn-lg px-4">Dashboard</a>
 				</div>
 			</div>
 		</div>
 	</div>
-
 {% endblock %}
