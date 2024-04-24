@@ -54,11 +54,6 @@ class Exam
     /**
      * @var Collection<int, ProfileExamRelated>
      */
-    #[Assert\Regex(
-        pattern: "/^\d$/",
-        match: TRUE,
-        message: 'Your name cannot contain a number.',
-    )]
     #[ORM\OneToMany(targetEntity: ProfileExamRelated::class, mappedBy: 'exam')]
     private Collection $profileExamsRelatedExam;
 
@@ -76,11 +71,6 @@ class Exam
      * @var string $total_marks
      *  Store the total marks.
      */
-    #[Assert\Regex(
-        pattern: "/^\d$/",
-        match: TRUE,
-        message: 'Your name cannot contain a number.',
-    )]
     private ?string $total_marks = NULL;
 
     #[ORM\Column(length: 100)]
@@ -105,7 +95,7 @@ class Exam
     #[ORM\OneToMany(targetEntity: Questions::class, mappedBy: 'exam', orphanRemoval: TRUE)]
     private Collection $question;
 
-    #[ORM\Column(type: Types::DATETIME_MUTABLE, NULLable: TRUE)]
+    #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: TRUE)]
 
     /**
      * @var string $exam_date
@@ -113,17 +103,12 @@ class Exam
      */
     private ?\DateTimeInterface $exam_date = NULL;
 
-    #[ORM\Column(length: 255, NULLable: TRUE)]
+    #[ORM\Column(length: 255, nullable: TRUE)]
 
     /**
      * @var string $required_schooling_marks.
      *  Store the required schooling marks of user.
      */
-    #[Assert\Regex(
-        pattern: "/^\d+%$/",
-        match: TRUE,
-        message: 'Your name cannot contain a number.',
-    )]
     private ?string $required_schooling_marks = NULL;
 
     #[ORM\Column(length: 255)]
@@ -132,11 +117,6 @@ class Exam
      * @var string $reuired_graduation_marks
      *  Store the Reuired graduation marks.
      */
-    #[Assert\Regex(
-        pattern: "/^\d+%$/",
-        match: TRUE,
-        message: 'Your name cannot contain a number.',
-    )]
     private ?string $required_graduation_marks = NULL;
 
     /**

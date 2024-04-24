@@ -18,47 +18,47 @@ class Result
      * @var int $id.
      *  Result Id.
      */
-    private ?int $id = null;
+    private ?int $id = NULL;
 
-    #[ORM\Column(nullable: true)]
+    #[ORM\Column(nullable: TRUE)]
 
     /**
      * @var int $user_id.
      *  User Id.
      */
-    private ?int $user_id = null;
+    private ?int $user_id = NULL;
 
-    #[ORM\Column(nullable: true)]
+    #[ORM\Column(nullable: TRUE)]
 
     /**
      * @var int $exam_id.
      *  Exam Id.
      */
-    private ?int $exam_id = null;
+    private ?int $exam_id = NULL;
 
-    #[ORM\Column(length: 255, nullable: true)]
+    #[ORM\Column(length: 255, nullable: TRUE)]
 
     /**
      * @var string $correct_ans.
      *  Number of Correct answer.
      */
-    private ?string $correct_ans = null;
+    private ?string $correct_ans = NULL;
 
-    #[ORM\Column(length: 255, nullable: true)]
+    #[ORM\Column(length: 255, nullable: TRUE)]
 
     /**
      * @var string $innoraft_ans.
      *  Number of Inncorrect Answers..
      */
-    private ?string $incorrect_ans = null;
+    private ?string $incorrect_ans = NULL;
 
-    #[ORM\Column(length: 255, nullable: true)]
+    #[ORM\Column(length: 255, nullable: TRUE)]
 
     /**
      * @var string $gotten_marks.
      *  Gotten Marks of user.
      */
-    private ?string $gotten_marks = null;
+    private ?string $gotten_marks = NULL;
 
     /**
      * Function getid()

@@ -3,8 +3,6 @@
 {% endblock %}
 {% block body %}
 <div class="container my-4" style = "width:50rem; border: 2px solid gray; border-radius:10px;">
-{# show_questions.html.twig #}
-{# {{ dump(question) }} #}
 <div class="box-shadow rounded mt-2 p-4" style = "background-color:#f7f7f7;; border-radius:10px;">
 <form action = "{{path('exam_submit',{'examId':examId})}}"  method="POST">
   {% for questions in question %}

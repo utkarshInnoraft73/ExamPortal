@@ -26,12 +26,14 @@ class RegistrationController extends AbstractController
      * Route path(/resgister).
      * Route name (app_register).
      */
-    #[Route('/register', name: 'app_register')]
 
     /**
      * Public function register().
      * To manage the rgisteration logic and the controller.
      *
+     * @Route path(/resgister).
+     * Set the path(/register).
+     * 
      * @param Request @request.
      *  To submiting the user request.
      * @param UserPasswordHasherInterface $userPasswordHasher.
@@ -42,6 +44,7 @@ class RegistrationController extends AbstractController
      * @return Response
      *  Return the response.
      */
+    #[Route('/register', name: 'app_register')]
     public function register(Request $request, UserPasswordHasherInterface $userPasswordHasher, EntityManagerInterface $entityManager, AuthorizationCheckerInterface $authorizationChecker): Response
     {
         // Create the instance of class User.
@@ -50,7 +53,7 @@ class RegistrationController extends AbstractController
         // Create the form for class RegistrationFormType class.
         $form = $this->createForm(RegistrationFormType::class, $user);
         $form->handleRequest($request);
-        
+
         if ($form->isSubmitted() && $form->isValid()) {
             $user->setPassword(
                 $userPasswordHasher->hashPassword(

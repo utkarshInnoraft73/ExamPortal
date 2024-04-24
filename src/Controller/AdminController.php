@@ -13,6 +13,7 @@ use App\Repository\ExamRepository;
 use App\Entity\User;
 use App\Form\ExamType;
 use App\Entity\Questions;
+use App\Services\Admin\Exam\AdminExam;
 
 /**
  * Class AdminController.
@@ -21,6 +22,11 @@ use App\Entity\Questions;
  */
 class AdminController extends AbstractController
 {
+    /**
+     * @var object $em
+     *  To manage the entity state and data.
+     */
+    private $em;
 
     /**
      * Contructor __construct.
@@ -29,41 +35,33 @@ class AdminController extends AbstractController
      * @var EntityManagerInterface $em
      *  To set the entity management.
      */
+
     public function __construct(EntityManagerInterface $em)
     {
         $this->em = $em;
     }
 
     /**
-     * Route for /admin.
-     * Path(/admin).
-     * Route name (app_name).
-     */
-    #[Route('/admin', name: 'app_admin')]
-
-    /**
      * Function index().
      *  To Route the admin.
+     *
+     * @Route Path(/admin).
+     *  Set the Path(/admin).
      *
      * @return Response admin/index.html.twig.
      *  The page index.html.twig inside the page admin folder.
      */
+    #[Route('/admin', name: 'app_admin')]
     public function index(): Response
     {
         return $this->render('admin/index.html.twig');
     }
 
     /**
-     * Route for create exam.
-     * Routh path (admin/create-exam).
-     * Routh name (create_exam).
-     *
-     */
-    #[Route('/admin/create-exam', 'create_exam')]
-
-    /**
      * Public funtion createExam();
      *  To create the exams.
+     *
+     * @Routh path (admin/create-exam)
      *
      * @param Request $request.
      *  Manage the reques.
@@ -71,6 +69,7 @@ class AdminController extends AbstractController
      * @return Response (create-exam/create-exam.html.twig).
      *  Return response the to the page create-exam.html.twig.
      */
+    #[Route('/admin/create-exam', 'create_exam')]
     public function createExam(Request $request): Response
     {
         $exam = new Exam();
@@ -89,72 +88,33 @@ class AdminController extends AbstractController
     }
 
     /**
-     * Route for questions
-     * Routh path (admin/questions).
-     * Routh name (app_adminQuestion).
-     *
-     */
-    #[Route('/admin/questions', 'app_adminQuestion')]
-
-    /**
      * Public funtion allQuestions();
      *  To Show all predefined questons.
+     *
+     * @Routh path (admin/questions).
      *
      * @param SerializerInterface $serializer.
      *  Manage the reques.
      *
      * @return Response
      */
+    #[Route('/admin/questions', 'app_adminQuestion')]
     public function allQuestions(SerializerInterface $serializer): Response
     {
         $questions = $this->em->getRepository(Questions::class)->findAll();
-        $Id = [];
-        $quesTitle = [];
-        $A = [];
-        $B = [];
-        $C = [];
-        $D = [];
-        $correct = [];
-        $marks = [];
-
-        for ($i = 0; $i < count($questions); $i++) {
-            array_push($Id, $questions[$i]->getId());
-            array_push($quesTitle, $questions[$i]->getQuestion());
-            array_push($A, $questions[$i]->getOptA());
-            array_push($B, $questions[$i]->getOptB());
-            array_push($C, $questions[$i]->getOptC());
-            array_push($D, $questions[$i]->getOptD());
-            array_push($correct, $questions[$i]->getCorrectOpt());
-            array_push($marks, $questions[$i]->getMarksForQuestion());
-        }
-
-        $data = [
-            'title' => $quesTitle,
-            'A' => $A,
-            'B' => $B,
-            'C' => $C,
-            'D' => $D,
-            'correct' => $correct,
-            'marks' => $marks,
-        ];
-        $jsonContent = $serializer->serialize($data, 'json');
-        $jsonDataArray = json_decode($jsonContent, true);
+        $questionData = new AdminExam();
+        $jsonContent = $serializer->serialize($questionData->questionAll($questions), 'json');
+        $jsonDataArray = json_decode($jsonContent, TRUE);
         return $this->render('create-exam/allQuestion.html.twig', [
             'jsonData' => $jsonDataArray
         ]);
     }
 
     /**
-     * Route for exams list created by admin.
-     * Routh path (admin/your-exams/{id}).
-     * Routh name (your_exams).
-     *
-     */
-    #[Route('/admin/your-exams/{id}', 'your_exams')]
-
-    /**
      * Public funtion yourExams();
      *  To create the exams.
+     *
+     * @Routh path (admin/your-exams/{id})
      *
      * @param int id.
      *  User id.
@@ -167,55 +127,24 @@ class AdminController extends AbstractController
      *
      * @return Response
      */
+    #[Route('/admin/your-exams/{id}', 'your_exams')]
     public function yourExams(int $id,SerializerInterface $serializer, ExamRepository $er): Response
     {
         $exam = $er->findAll();
         $user = $this->em->getRepository(User::class)->find($id);
-        $userName = $user->getEmail();
-        $examArr = [];
-        $examId = [];
-        $examDuration = [];
-        $fullMarks = [];
-        $passingMarks = [];
-        $numOfQues = [];
-
-        for ($i = 0; $i < count($exam); $i++) {
-            if ($userName == $exam[$i]->getCreatedBy()) {
-                array_push($examId, $exam[$i]->getId());
-                array_push($examArr, $exam[$i]->getExamName());
-                array_push($fullMarks, $exam[$i]->getTotalMarks());
-                array_push($examDuration, $exam[$i]->getDuration());
-                array_push($passingMarks, $exam[$i]->getPassingMarks());
-                array_push($numOfQues, $exam[$i]->getNoOfQuestios());
-            }
-        }
-        $data = [
-
-            'examId' => $examId,
-            'exam' => $examArr,
-            'duration' => $examDuration,
-            'fullMarks' => $fullMarks,
-            'passingMarks' => $passingMarks,
-            'numOfQues' => $numOfQues,
-        ];
-        $jsonContent = $serializer->serialize($data, 'json');
-        $jsonDataArray = json_decode($jsonContent, true);
+        $yourExam = new AdminExam();
+        $jsonContent = $serializer->serialize($yourExam->yourCreatedExam($user, $exam), 'json');
+        $jsonDataArray = json_decode($jsonContent, TRUE);
         return $this->render('your-exams/your-exams.html.twig', [
             'jsonData' => $jsonDataArray
         ]);
     }
 
     /**
-     * Route for my delete exams.
-     * Routh path (admin/delete-exams/{examId}).
-     * Routh name (delete_exams).
-     *
-     */
-    #[Route('/admin/delete-exams/{examId}', 'delete_exams')]
-
-    /**
      * Public funtion deleteExams();
      *  To delete the exams.
+     *
+     * @Routh path (admin/delete-exams/{examId}).
      *
      * @param int $examId.
      *  Exam Id for that admin is requesting for delete.
@@ -223,6 +152,7 @@ class AdminController extends AbstractController
      * @return Response (route name your_exams).
      *  Return response.
      */
+    #[Route('/admin/delete-exams/{examId}', 'delete_exams')]
     public function deleteExams($examId): Response
     {
         $exam = $this->em->getRepository(Exam::class)->find($examId);
@@ -233,16 +163,10 @@ class AdminController extends AbstractController
     }
 
     /**
-     * Route for my exam detail for particular exam.
-     * Routh path (admin/your-exam-detail/{id}).
-     * Routh name (adminExam_details).
-     *
-     */
-    #[Route('/admin/your-exam-detail/{examId}', 'adminExam_details')]
-
-    /**
      * Public funtion yourExamDetail();
      *  To Show the particular exam detail.
+     *
+     * @Routh path (admin/your-exam-detail/{id}).
      *
      * @param Request $request.
      *  Manage the request.
@@ -253,23 +177,13 @@ class AdminController extends AbstractController
      * @return Response
      *  Return response the to the page your-exam.html.twig.
      */
+    #[Route('/admin/your-exam-detail/{examId}', 'adminExam_details')]
     public function yourExamDetail(SerializerInterface $serializer, $examId): Response
     {
         $exam = $this->em->getRepository(Exam::class)->find($examId);
-        $examName = $exam->getExamName();
-        $duration = $exam->getDuration();
-        $totalQues = $exam->getNoOfQuestios();
-        $totalMarks = $exam->getTotalMarks();
-        $passingMarks = $exam->getPassingMarks();
-        $data = [
-            'examName' => $examName,
-            'duration' => $duration,
-            'fullMarks' => $totalMarks,
-            'passingMarks' => $passingMarks,
-            'totalQues' => $totalQues,
-        ];
-        $jsonContent = $serializer->serialize($data, 'json');
-        $jsonDataArray = json_decode($jsonContent, true);
+        $yourExamDetails = new AdminExam();
+        $jsonContent = $serializer->serialize($yourExamDetails->yourExamDetail($exam), 'json');
+        $jsonDataArray = json_decode($jsonContent, TRUE);
         return $this->render('your-exams/exam-details.html.twig', [
             'jsonData' => $jsonDataArray
         ]);

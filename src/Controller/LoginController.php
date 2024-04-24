@@ -15,22 +15,19 @@ use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
  */
 class LoginController extends AbstractController
 {
-    /**
-     * Route for login page.
-     * Route path(/login).
-     * Route name(app_login).
-     */
-    #[Route(path: '/login', name: 'app_login')]
 
     /**
      * Public funtion login().
      *  To manage the login authenticain.
+     *
+     * @Route path(/login).
      *
      * @param AuthencationUtils $authenticationUtils
      *  To authenticate the utils.
      *
      * @return Response.
      */
+    #[Route(path: '/login', name: 'app_login')]
     public function login(AuthenticationUtils $authenticationUtils): Response
     {
         // Check if the user is avaible or not.
@@ -52,17 +49,15 @@ class LoginController extends AbstractController
         return $this->render('security/login.html.twig', ['last_username' => $lastUsername, 'error' => $error]);
     }
 
-    /**
-     * Route for logout page.
-     * Route path(/logout).
-     * Route name(app_logout).
-     */
-    #[Route(path: '/logout', name: 'app_logout')]
 
     /**
      * Public funtion logout().
      *  To manage the logout.
+     *
+     * @Route Path(/logout).
+     *  Set the path to /logout
      */
+    #[Route(path: '/logout', name: 'app_logout')]
     public function logout(): void
     {
         throw new \LogicException('This method can be blank - it will be intercepted by the logout key on your firewall.');

@@ -7,10 +7,8 @@
 				<span style="font-size: 15px; font-weight:200;">{{ app.user.userIdentifier }}</span>
 			</h3>
 			<a href="{{ path('app_logout') }}">Logout</a>
-
 			<hr>
 			<ul class="nav nav-pills flex-column mb-auto">
-
 				<li>
 					<a href="{{path('app_dashboard')}}" class="nav-link link-dark">
 						Dashboard
@@ -18,10 +16,7 @@
 				</li>
 				<li>
 					<a href="{{path('app_appliedExams', {'id': app.user.id})}}" class="nav-link link-dark">
-
-
 						Applied Exams
-
 					</a>
 				</li>
 				<li>
@@ -31,7 +26,6 @@
 				</li>
 				<li>
 					<a href="{{ path('app_profile', { 'id': app.user.id }) }}" class="nav-link link-dark">
-
 						Profile
 					</a>
 				</li>
@@ -59,7 +53,6 @@
 					</tr>
 				</thead>
 				<tbody>
-					{# {{ dump(jsonData.examNames) }} #}
 					{% for i in 0..(jsonData.resultId|length - 1) %}
 						<tr>
 							<td>{{ i + 1 }}</td>
@@ -76,4 +69,3 @@
 			</table>
 		{% endif %}
 	{% endblock %}
-

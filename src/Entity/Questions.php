@@ -17,7 +17,7 @@ class Questions
      * @var int id
      *  Stores the question id.
      */
-    private ?int $id = null;
+    private ?int $id = NULL;
 
     #[ORM\Column(length: 255)]
 
@@ -25,7 +25,7 @@ class Questions
      * @var string $question
      *  Stored the question title.
      */
-    private ?string $question = null;
+    private ?string $question = NULL;
 
     #[ORM\Column(length: 255)]
 
@@ -33,7 +33,7 @@ class Questions
      * @var string $opt_a
      *  Store the option one of question.
      */
-    private ?string $opt_a = null;
+    private ?string $opt_a = NULL;
 
     #[ORM\Column(length: 255)]
 
@@ -41,7 +41,7 @@ class Questions
      * @var string $opt_b
      *  Store the option two of question.
      */
-    private ?string $opt_b = null;
+    private ?string $opt_b = NULL;
 
     #[ORM\Column(length: 255)]
 
@@ -49,7 +49,7 @@ class Questions
      * @var string $opt_c
      *  Store the option three of question.
      */
-    private ?string $opt_c = null;
+    private ?string $opt_c = NULL;
 
     #[ORM\Column(length: 255)]
 
@@ -57,7 +57,7 @@ class Questions
      * @var string $opt_d
      *  Store the option last of question.
      */
-    private ?string $opt_d = null;
+    private ?string $opt_d = NULL;
 
     #[ORM\Column(length: 255)]
 
@@ -65,18 +65,18 @@ class Questions
      * @var string $correct_opt
      *  Store correct option of question.
      */
-    private ?string $correct_opt = null;
+    private ?string $correct_opt = NULL;
 
     #[ORM\Column(length: 255)]
 
     /**
      * @var string
      */
-    private ?string $marks_for_question = null;
+    private ?string $marks_for_question = NULL;
 
     #[ORM\ManyToOne(inversedBy: 'question')]
-    #[ORM\JoinColumn(nullable: false)]
-    private ?Exam $exam = null;
+    #[ORM\JoinColumn(nullable: FALSE)]
+    private ?Exam $exam = NULL;
 
     /**
      * Public funtion getId()

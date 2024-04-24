@@ -25,15 +25,15 @@ class ProfileExamRelated
      * @var int id.
      *  Id.
      */
-    private ?int $id = null;
+    private ?int $id = NULL;
 
     #[ORM\ManyToOne(inversedBy: 'profileExamRelateds')]
-    #[ORM\JoinColumn(nullable: false)]
-    private ?Profile $profile = null;
+    #[ORM\JoinColumn(nullable: FALSE)]
+    private ?Profile $profile = NULL;
 
     #[ORM\ManyToOne(inversedBy: 'profileExamsRelatedExam')]
-    #[ORM\JoinColumn(nullable: false)]
-    private ?Exam $exam = null;
+    #[ORM\JoinColumn(nullable: FALSE)]
+    private ?Exam $exam = NULL;
 
     public function getId(): ?int
     {

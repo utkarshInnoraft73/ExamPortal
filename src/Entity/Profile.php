@@ -86,7 +86,7 @@ class Profile
     private ?string $resume_link = NULL;
 
     #[ORM\OneToOne(inversedBy: 'profile', cascade: ['persist', 'remove'])]
-    #[ORM\JoinColumn(NULLable: FALSE)]
+    #[ORM\JoinColumn(nullable: FALSE)]
     private ?User $user = NULL;
 
     /**

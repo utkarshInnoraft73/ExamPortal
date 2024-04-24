@@ -21,7 +21,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      * @var int id.
      *  User Id
      */
-    private ?int $id = null;
+    private ?int $id = NULL;
 
     #[ORM\Column(length: 180)]
 
@@ -29,7 +29,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      * @var string $email.
      *  User email.
      */
-    private ?string $email = null;
+    private ?string $email = NULL;
 
     /**
      * @var list<string> The user roles
@@ -41,7 +41,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      * @var string The hashed password
      */
     #[ORM\Column]
-    private ?string $password = null;
+    private ?string $password = NULL;
 
     #[ORM\Column(type: 'boolean')]
 
@@ -52,14 +52,14 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private $is_verified = false;
 
     #[ORM\OneToOne(mappedBy: 'user', cascade: ['persist', 'remove'])]
-    private ?Profile $profile = null;
+    private ?Profile $profile = NULL;
 
-    #[ORM\Column(length: 255, nullable: true)]
+    #[ORM\Column(length: 255, nullable: TRUE)]
     /**
      * @var string $user_type
      *  Stores the type of user.
      */
-    private ?string $user_type = null;
+    private ?string $user_type = NULL;
 
     #[ORM\Column]
 
@@ -161,7 +161,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function eraseCredentials(): void
     {
         // If you store any temporary, sensitive data on the user, clear it here
-        // $this->plainPassword = null;
+        // $this->plainPassword = NULL;
     }
 
     public function isVerified(): ?bool
