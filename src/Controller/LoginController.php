@@ -40,7 +40,7 @@ class LoginController extends AbstractController
             }
 
             // Else render the user dashboard.
-            else{
+            else {
                 return $this->redirectToRoute('app_dashboard');
             }
         }
@@ -48,7 +48,6 @@ class LoginController extends AbstractController
         $lastUsername = $authenticationUtils->getLastUsername();
         return $this->render('security/login.html.twig', ['last_username' => $lastUsername, 'error' => $error]);
     }
-
 
     /**
      * Public funtion logout().

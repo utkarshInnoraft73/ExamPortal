@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use Exception;
 use App\Entity\User;
 use App\Entity\Exam;
 use App\Entity\Result;
@@ -138,12 +139,17 @@ class GeneralController extends AbstractController
 
         // Setting the proifle.
         $profile->setUser($user);
-        if ($form->isSubmitted() && $form->isValid()) {
-            $this->em->persist($profile);
-            $this->em->flush();
+        try{
+            if ($form->isSubmitted() && $form->isValid()) {
+                $this->em->persist($profile);
+                $this->em->flush();
 
-            // Render to the dashboard.
-            return $this->redirectToRoute('app_dashboard');
+                // Render to the dashboard.
+                return $this->redirectToRoute('app_dashboard');
+            }
+        }
+        catch(Exception $e){
+            throw new Exception("Data not set");
         }
         return $this->render('profile/create-profile.html.twig', [
             'form' => $form->createView()
@@ -171,9 +177,15 @@ class GeneralController extends AbstractController
         $profile = $this->em->getRepository(Profile::class)->find($id);
         $form = $this->createForm(ProfileType::class, $profile);
         $form->handleRequest($request);
-        if ($form->isSubmitted() && $form->isValid()) {
-            $this->em->persist($profile);
-            $this->em->flush();
+        try {
+            if ($form->isSubmitted() && $form->isValid()) {
+                $this->em->persist($profile);
+                $this->em->flush();
+
+                return $this->redirectToRoute('app_dashboard');
+            }
+        } catch (Exception $e) {
+            throw new Exception("Data not set");
         }
         return $this->render('profile/create-profile.html.twig', [
             'form' => $form->createView()
@@ -209,7 +221,7 @@ class GeneralController extends AbstractController
 
         $examData = new Exams($this->em);
         $jsonContent = $serializer->serialize($examData->getAllExams($exams, $profileExam, $profile), 'json');
-        $jsonDataArray = json_decode($jsonContent, true);
+        $jsonDataArray = json_decode($jsonContent, TRUE);
         return $this->render('exams/exam.html.twig', [
             'jsonData' => $jsonDataArray
         ]);
@@ -414,7 +426,7 @@ class GeneralController extends AbstractController
         $result = $this->em->getRepository(Result::class)->findAll();
         $exam = $this->em->getRepository(Exam::class)->find($examId);
         $allResult = new Exams();
-        
+
         $jsonContent = $serializer->serialize($allResult->allResults($result, $exam), 'json');
         $jsonDataArray = json_decode($jsonContent, TRUE);
         return $this->render('result/allResult.html.twig', [

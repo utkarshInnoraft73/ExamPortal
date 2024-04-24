@@ -22,18 +22,12 @@ class RegistrationController extends AbstractController
 {
 
     /**
-     * Route for user registration.
-     * Route path(/resgister).
-     * Route name (app_register).
-     */
-
-    /**
      * Public function register().
      * To manage the rgisteration logic and the controller.
      *
      * @Route path(/resgister).
      * Set the path(/register).
-     * 
+     *
      * @param Request @request.
      *  To submiting the user request.
      * @param UserPasswordHasherInterface $userPasswordHasher.

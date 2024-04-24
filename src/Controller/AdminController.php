@@ -2,18 +2,19 @@
 
 namespace App\Controller;
 
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Attribute\Route;
-use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Component\HttpFoundation\Request;
-use App\Entity\Exam;
-use Symfony\Component\Serializer\SerializerInterface;
-use App\Repository\ExamRepository;
+use Exception;
 use App\Entity\User;
+use App\Entity\Exam;
 use App\Form\ExamType;
 use App\Entity\Questions;
+use App\Repository\ExamRepository;
 use App\Services\Admin\Exam\AdminExam;
+use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Serializer\SerializerInterface;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 /**
  * Class AdminController.
@@ -35,7 +36,6 @@ class AdminController extends AbstractController
      * @var EntityManagerInterface $em
      *  To set the entity management.
      */
-
     public function __construct(EntityManagerInterface $em)
     {
         $this->em = $em;
@@ -76,11 +76,17 @@ class AdminController extends AbstractController
         $form = $this->createForm(ExamType::class, $exam);
         $form->handleRequest($request);
         $exam->setCreatedBy($this->getUser()->getEmail());
-        if ($form->isSubmitted() && $form->isValid()) {
-            $this->em->persist($exam);
-            $this->em->flush();
-            return $this->redirectToRoute('app_admin');
+        try {
+            if ($form->isSubmitted() && $form->isValid()) {
+                $this->em->persist($exam);
+                $this->em->flush();
+                return $this->redirectToRoute('app_admin');
+            }
         }
+        catch (Exception $e) {
+            throw new Exception("Data not set");
+        }
+
 
         return $this->render('create-exam/create-exam.html.twig', [
             'form' => $form->createView()
