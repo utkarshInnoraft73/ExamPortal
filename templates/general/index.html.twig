@@ -1,0 +1,27 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Welcome to my page!
+{% endblock %}
+
+{% block body %}
+	<div class="example-wrapper">
+		<div class="container">
+			<div class="homepage">
+				<h1 class="home-heading text-center text-white">Welcome, You are at the right place.</h1>
+				<p class="home-text text-center ">
+					Lorem Ipsum is simply dummy text of the printing and typesetting industry.<br>
+					Lorem Ipsum has been the industry's standard dummy text ever since
+					<br>
+					the 1500s, when an unknown printer took
+					<br>
+					a galley of type and scrambled it to
+					<div class="my-2 text-center">
+						<a class="btn btn-primary" href="{{path('app_register')}}">Get Started</a>
+						<a class="btn btn-light " href="{{path('app_register')}}">Explore</a>
+					</div>
+				</p>
+			</div>
+		</div>
+	</div>
+{% endblock %}
+
